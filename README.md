@@ -20,6 +20,7 @@ Requisitos: Docker com Compose e `make`.
 | `make rede PERDA=2` | aplica a perda (0, 1, 2, 3 ou 5%) e o atraso fixo; ver [docs/rede.md](docs/rede.md) |
 | `make rede-status` / `make rede-limpar` | mostra / remove as regras de rede |
 | `make test-rede` | testa os 5 níveis de perda |
+| `make poder` | refaz a simulação de poder (Python); ver [docs/plano-analise.md](docs/plano-analise.md) |
 | `make down` | para e remove os containers |
 
 Versões verificadas em 25/11/2026: Caddy 2.11.9, Google Chrome 158.0.8127.88 e Playwright 1.65.1.

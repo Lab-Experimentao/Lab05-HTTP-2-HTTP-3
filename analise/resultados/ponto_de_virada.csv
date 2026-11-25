@@ -1,0 +1,37 @@
+perfil,n,erro_familia,todos_com_efeito,virada_exata
+sem efeito,10,0.0369,,
+sem efeito,20,0.0422,,
+sem efeito,30,0.0483,,
+sem efeito,40,0.0461,,
+sem efeito,50,0.0512,,
+sem efeito,60,0.0483,,
+sem efeito,70,0.0462,,
+sem efeito,80,0.0422,,
+sem efeito,90,0.0484,,
+sem efeito,100,0.0478,,
+sem efeito,110,0.0516,,
+sem efeito,120,0.0476,,
+"virada em 2%, constante",10,0.0145,0.0039,0.0038
+"virada em 2%, constante",20,0.0213,0.0432,0.0411
+"virada em 2%, constante",30,0.0295,0.1571,0.1517
+"virada em 2%, constante",40,0.034,0.3182,0.3091
+"virada em 2%, constante",50,0.0415,0.4702,0.456
+"virada em 2%, constante",60,0.0439,0.6313,0.6136
+"virada em 2%, constante",70,0.0455,0.7434,0.7231
+"virada em 2%, constante",80,0.0447,0.833,0.8116
+"virada em 2%, constante",90,0.0489,0.8954,0.8701
+"virada em 2%, constante",100,0.0466,0.9287,0.9045
+"virada em 2%, constante",110,0.0472,0.9628,0.9388
+"virada em 2%, constante",120,0.047,0.9774,0.9545
+"virada em 2%, crescente",10,0.0188,0.0303,0.0295
+"virada em 2%, crescente",20,0.0321,0.2317,0.2248
+"virada em 2%, crescente",30,0.037,0.4625,0.4491
+"virada em 2%, crescente",40,0.0424,0.6462,0.6285
+"virada em 2%, crescente",50,0.0457,0.7703,0.749
+"virada em 2%, crescente",60,0.0484,0.8618,0.8374
+"virada em 2%, crescente",70,0.0492,0.9067,0.8847
+"virada em 2%, crescente",80,0.0478,0.9387,0.9156
+"virada em 2%, crescente",90,0.0449,0.9611,0.9395
+"virada em 2%, crescente",100,0.0505,0.9776,0.9539
+"virada em 2%, crescente",110,0.0506,0.985,0.9611
+"virada em 2%, crescente",120,0.0494,0.9935,0.9696
