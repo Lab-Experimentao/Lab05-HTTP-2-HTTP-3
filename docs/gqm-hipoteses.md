@@ -81,9 +81,20 @@ M4 e M5 são calculadas na análise (issues #13 e #14), não no CSV.
 | Fator | Níveis | Como é controlado |
 |---|---|---|
 | **Protocolo** | HTTP/2, HTTP/3 | Flags do Chrome: `--disable-quic` para HTTP/2; `--enable-quic --origin-to-force-quic-on=<host>:443` para HTTP/3 (issue #6) |
-| **Perda de pacotes** | 0%, 1%, 2%, 3%, 5% | `tc netem loss <p>%` na interface do container cliente (issue #7) |
+| **Perda de pacotes** | 0%, 1%, 2%, 3%, 5% | `tc netem loss <p>%` na saída do container **servidor** (issue #7; ver nota abaixo) |
 
-O desenho é **fatorial completo 2 × 5 = 10 tratamentos**. O número de repetições por tratamento é definido na issue #9 (simulação de poder). A ordem das cargas deve ser **aleatorizada** (ou, no mínimo, alternada entre protocolos dentro de cada nível de perda) para que variações do host ao longo do tempo não se confundam com o efeito do protocolo.
+O desenho é **fatorial completo 2 × 5 = 10 tratamentos**. São **90 repetições por tratamento**, definidas por simulação de poder na issue #9 (ver [plano-analise.md](plano-analise.md)). A ordem das cargas deve ser **aleatorizada** (ou, no mínimo, alternada entre protocolos dentro de cada nível de perda) para que variações do host ao longo do tempo não se confundam com o efeito do protocolo.
+
+> **Nota: por que a perda é aplicada no servidor, e não no cliente.** A primeira versão deste documento previa a perda na interface do cliente. O `tc netem` comum, porém, age só sobre o que **sai** da interface:
+>
+> | Onde a perda é aplicada | O que se perde | Efeito no experimento |
+> |---|---|---|
+> | Saída do cliente (versão anterior) | requisições e confirmações (ACKs) | os dados da página chegariam intactos, sem o *head-of-line blocking* que Q2 e Q3 procuram medir |
+> | Saída do servidor (versão atual) | os dados da página: HTML, imagens, CSS e JS | a perda atinge os dados, como a hipótese supõe |
+>
+> Um ACK perdido costuma ser compensado pelo seguinte, pois as confirmações são cumulativas. Já um dado perdido precisa ser retransmitido e, no HTTP/2, bloqueia todos os fluxos até chegar. O erro não apareceria no `ping`, que mostra a mesma perda nos dois casos.
+>
+> O ajuste não altera perguntas, hipóteses, métricas nem níveis de perda, e foi feito antes da coleta. Consequência: os resultados valem para perda no sentido **servidor → cliente**; a perda no sentido contrário não é emulada (a tratar na issue #15).
 
 ### 5.2 Variáveis dependentes
 
@@ -97,7 +108,7 @@ O desenho é **fatorial completo 2 × 5 = 10 tratamentos**. O número de repeti�
 
 | Variável | Valor |
 |---|---|
-| Atraso de rede | fixo em todos os tratamentos (valor definido na issue #7) |
+| Atraso de rede | RTT de 50 ms em todos os tratamentos: 25 ms na saída de cada container (ver [rede.md](rede.md)) |
 | Página de teste | a mesma em todas as cargas, com 30 a 50 recursos (issue #5) |
 | Versões do software | mesma versão do Caddy e do Chrome em toda a coleta (registradas no README) |
 | Estado do navegador | perfil novo e cache vazio a cada carga, sem reaproveitar conexão nem retomada de sessão TLS (0-RTT), para que todo carregamento inclua o handshake completo |
@@ -161,14 +172,17 @@ Teste bilateral em todos os níveis: o handshake do QUIC favorece o HTTP/3, mas 
 - H0: *F₃(p) = F₂(p)*: a proporção de cargas que falham é igual nos dois protocolos
 - H1: *F₃(p) ≠ F₂(p)*: a proporção de cargas que falham é diferente
 
-### 6.5 Parâmetros dos testes (proposta; a confirmar na issue #9)
+### 6.5 Parâmetros dos testes (confirmados na issue #9)
 
-| Parâmetro | Proposta |
+Justificativas em [plano-analise.md](plano-analise.md).
+
+| Parâmetro | Valor |
 |---|---|
 | Nível de significância | α = 0,05 |
 | Teste para M1 e M2 | Mann-Whitney U (amostras independentes, sem supor normalidade) |
 | Teste para M3 | Exato de Fisher (proporções com contagens pequenas) |
 | Tamanho do efeito | Cliff's δ, com os limiares de Romano et al. (2006): \|δ\| < 0,147 desprezível; < 0,33 pequeno; < 0,474 médio; ≥ 0,474 grande |
 | Comparações múltiplas | correção de Holm sobre os 5 testes de cada família (M1, M2, M3) |
+| Repetições | 90 cargas por combinação |
 
-**Observação sobre a Parte 2 (0%):** não rejeitar H0 em 0% **não prova** que os protocolos são iguais, só que não detectamos diferença. Se o grupo quiser afirmar que "em redes boas tanto faz", o caminho é um teste de equivalência (TOST) com uma margem definida **antes** da coleta (por exemplo, ±5% da mediana do HTTP/2). Essa decisão fica para a issue #9.
+**Observação sobre a Parte 2 (0%):** não rejeitar H0 em 0% **não prova** que os protocolos são iguais, só que não detectamos diferença. Por isso, "em redes boas tanto faz" só será afirmado se o teste de equivalência (TOST) confirmar que as medianas diferem menos de ±10%, margem definida **antes** da coleta.

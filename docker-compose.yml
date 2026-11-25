@@ -1,0 +1,40 @@
+name: lab05
+
+services:
+  server:
+    build: ./server
+    cap_add: [NET_ADMIN]
+    environment:
+      QUIC_GO_DISABLE_GSO: "true" # um pacote por vez no QUIC (ver docs/rede.md)
+    ports:
+      - "443:443/tcp"
+      - "443:443/udp"
+    volumes:
+      - ./server/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./server/site:/srv:ro
+      - ./scripts:/scripts:ro
+      - caddy_data:/data
+    networks:
+      labnet:
+        aliases: [caddy.test]
+
+  client:
+    build: ./client
+    init: true
+    shm_size: 1gb
+    cap_add: [NET_ADMIN]
+    volumes:
+      - caddy_data:/caddy:ro
+      - ./scripts:/scripts:ro
+    healthcheck:
+      test: certutil -d sql:/root/.pki/nssdb -L -n caddy
+      interval: 2s
+      retries: 15
+    depends_on: [server]
+    networks: [labnet]
+
+networks:
+  labnet:
+
+volumes:
+  caddy_data:
