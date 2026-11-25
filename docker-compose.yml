@@ -20,6 +20,12 @@ services:
     init: true
     shm_size: 1gb
     cap_add: [NET_ADMIN]
+    volumes:
+      - caddy_data:/caddy:ro
+    healthcheck:
+      test: certutil -d sql:/root/.pki/nssdb -L -n caddy
+      interval: 2s
+      retries: 15
     depends_on: [server]
     networks: [labnet]
 

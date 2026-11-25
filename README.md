@@ -13,10 +13,21 @@ Requisitos: Docker com Compose e `make`.
 | Comando | O que faz |
 |---|---|
 | `make up` | constrói e sobe os dois containers (servidor Caddy e cliente Chrome + Playwright) |
-| `make test` | testa as portas, o HTTP/2, o Chrome e o `tc netem` |
+| `make test` | testa as portas, o Chrome em HTTP/2 e HTTP/3 e o `tc netem` |
 | `make ps` / `make logs` | mostra o estado / os logs dos containers |
 | `make client` / `make server` | abre um terminal no container |
 | `make versions` | mostra as versões do Caddy e do Chrome |
 | `make down` | para e remove os containers |
 
 Versões verificadas em 25/11/2026: Caddy 2.11.9, Google Chrome 158.0.8127.88 e Playwright 1.65.1.
+
+### Como o protocolo é forçado
+
+O cliente confia na CA local do Caddy (`client/start.sh`), e o Chrome é aberto com flags diferentes (`client/browser.js`):
+
+| Protocolo | Flags |
+|---|---|
+| HTTP/2 | `--disable-quic` |
+| HTTP/3 | `--enable-quic --origin-to-force-quic-on=caddy.test:443` |
+
+O protocolo usado é conferido por `nextHopProtocol` e pelo DevTools (CDP). Sem forçar, o Chrome permaneceu em `h2` nos nossos testes, mesmo com o Caddy anunciando HTTP/3 via `alt-svc`.

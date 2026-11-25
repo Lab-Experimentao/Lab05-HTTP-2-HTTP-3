@@ -1,7 +1,7 @@
 .PHONY: up down ps logs client server versions test
 
 up:
-	docker compose up -d --build
+	docker compose up -d --build --wait
 
 down:
 	docker compose down
