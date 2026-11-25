@@ -1,0 +1,11 @@
+{
+	servers {
+		protocols h1 h2 h3
+	}
+}
+
+caddy.test {
+	tls internal
+	root * /srv
+	file_server
+}

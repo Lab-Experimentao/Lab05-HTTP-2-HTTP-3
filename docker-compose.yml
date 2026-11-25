@@ -1,0 +1,30 @@
+name: lab05
+
+services:
+  server:
+    build: ./server
+    cap_add: [NET_ADMIN]
+    ports:
+      - "443:443/tcp"
+      - "443:443/udp"
+    volumes:
+      - ./server/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./server/site:/srv:ro
+      - caddy_data:/data
+    networks:
+      labnet:
+        aliases: [caddy.test]
+
+  client:
+    build: ./client
+    init: true
+    shm_size: 1gb
+    cap_add: [NET_ADMIN]
+    depends_on: [server]
+    networks: [labnet]
+
+networks:
+  labnet:
+
+volumes:
+  caddy_data:
