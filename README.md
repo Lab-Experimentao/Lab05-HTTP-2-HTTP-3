@@ -13,10 +13,13 @@ Requisitos: Docker com Compose e `make`.
 | Comando | O que faz |
 |---|---|
 | `make up` | constrói e sobe os dois containers (servidor Caddy e cliente Chrome + Playwright) |
-| `make test` | testa as portas, o Chrome em HTTP/2 e HTTP/3 e o `tc netem` |
+| `make test` | testa as portas e o Chrome em HTTP/2 e HTTP/3 |
 | `make ps` / `make logs` | mostra o estado / os logs dos containers |
 | `make client` / `make server` | abre um terminal no container |
 | `make versions` | mostra as versões do Caddy e do Chrome |
+| `make rede PERDA=2` | aplica a perda (0, 1, 2, 3 ou 5%) e o atraso fixo; ver [docs/rede.md](docs/rede.md) |
+| `make rede-status` / `make rede-limpar` | mostra / remove as regras de rede |
+| `make test-rede` | testa os 5 níveis de perda |
 | `make down` | para e remove os containers |
 
 Versões verificadas em 25/11/2026: Caddy 2.11.9, Google Chrome 158.0.8127.88 e Playwright 1.65.1.
