@@ -102,6 +102,7 @@ def main():
 <head>
   <meta charset="utf-8">
   <title>Lab05 - página de teste</title>
+  <link rel="icon" href="data:,">
 {links}
 {scripts}
 </head>
@@ -148,6 +149,9 @@ def escrever_doc(recursos):
         "- **Conteúdo aleatório:** não comprime, então o tamanho em disco é o que trafega. "
         "O Caddy também não está configurado com `encode`.",
         "- **Tudo local:** nenhum recurso externo; tudo é servido pelo Caddy, na mesma origem.",
+        "- **Sem favicon:** `<link rel=\"icon\" href=\"data:,\">` impede o Chrome de pedir "
+        "`/favicon.ico` por conta própria, o que somaria uma requisição fora do controle "
+        "do experimento.",
         "- **Carregamento:** CSS no `<head>`, JS com `defer` e imagens sem `loading=\"lazy\"`, "
         "então o evento `load` só ocorre depois de todos os recursos.",
         "",
