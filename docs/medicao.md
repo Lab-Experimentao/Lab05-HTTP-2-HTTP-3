@@ -10,6 +10,8 @@ O script [medir.js](../client/medir.js) roda no container cliente, carrega a pá
 
 O CSV é aberto em modo de acréscimo: rodar de novo com o mesmo `SAIDA` adiciona linhas em vez de apagar as anteriores.
 
+Em cada nível, [coletar.sh](../scripts/coletar.sh) zera as regras do `netem`, aplica a perda, mede e lê os contadores de pacotes do servidor. A perda observada vai para `dados/<nome>_rede.csv`. Ao fim, [conferir.py](../analise/conferir.py) confere o CSV: número de cargas, protocolo usado, recursos e perda observada (`make conferir SAIDA=piloto.csv REPS=5`). Resultado do piloto: [piloto.md](piloto.md).
+
 ## Como cada carga é feita
 
 | Decisão | Como | Por quê |

@@ -22,6 +22,7 @@ Requisitos: Docker com Compose e `make`.
 | `make test-rede` | testa os 5 níveis de perda |
 | `make piloto` | coleta piloto: 5 cargas por combinação em `dados/piloto.csv`; ver [docs/medicao.md](docs/medicao.md) |
 | `make coleta` | coleta completa: 90 cargas por combinação em `dados/coleta.csv` |
+| `make conferir SAIDA=piloto.csv REPS=5` | confere um CSV (protocolo, cargas, recursos e perda); resultado do piloto em [docs/piloto.md](docs/piloto.md) |
 | `make pagina` | recria a página de teste (40 recursos, cerca de 2 MB); ver [docs/pagina.md](docs/pagina.md) |
 | `make poder` | refaz a simulação de poder (Python); ver [docs/plano-analise.md](docs/plano-analise.md) |
 | `make down` | para e remove os containers |
