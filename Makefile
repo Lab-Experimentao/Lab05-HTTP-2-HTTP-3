@@ -1,4 +1,4 @@
-.PHONY: up down ps logs client server versions test rede rede-limpar rede-status test-rede coleta piloto pagina poder
+.PHONY: up down ps logs client server versions test rede rede-limpar rede-status test-rede coleta piloto conferir pagina poder
 
 up:
 	docker compose up -d --build --wait
@@ -59,21 +59,21 @@ test-rede-%:
 REPS ?= 90
 SAIDA ?= coleta.csv
 SEMENTE ?= 42
+PYTHON ?= python3
 PERDAS ?= 0 1 2 3 5
 
 coleta:
-	@for p in $(PERDAS); do \
-		$(MAKE) --no-print-directory rede PERDA=$$p || exit 1; \
-		docker compose exec -T client node medir.js --perda $$p --reps $(REPS) \
-			--saida /dados/$(SAIDA) --semente $(SEMENTE) || exit 1; \
-	done
-	$(MAKE) --no-print-directory rede-limpar
+	sh scripts/coletar.sh $(REPS) $(SAIDA) $(SEMENTE) $(PERDAS)
+	$(PYTHON) analise/conferir.py dados/$(SAIDA) $(REPS)
 
 piloto:
 	$(MAKE) --no-print-directory coleta REPS=5 SAIDA=piloto.csv
 
+conferir:
+	$(PYTHON) analise/conferir.py dados/$(SAIDA) $(REPS)
+
 pagina:
-	python scripts/gerar_pagina.py
+	$(PYTHON) scripts/gerar_pagina.py
 
 poder:
 	python analise/testar.py
