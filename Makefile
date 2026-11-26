@@ -1,4 +1,4 @@
-.PHONY: up down ps logs client server versions test rede rede-limpar rede-status test-rede poder
+.PHONY: up down ps logs client server versions test rede rede-limpar rede-status test-rede pagina poder
 
 up:
 	docker compose up -d --build --wait
@@ -53,6 +53,9 @@ test-rede-%:
 	$(MAKE) --no-print-directory rede PERDA=$*
 	docker compose exec -T client ping -q -i 0.01 -c 2000 caddy.test
 	docker compose exec -T client node smoke.js
+
+pagina:
+	python scripts/gerar_pagina.py
 
 poder:
 	python analise/testar.py
